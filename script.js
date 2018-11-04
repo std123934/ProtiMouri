@@ -152,6 +152,13 @@ function initMap() {
       map.setView([0, 0], 2);
       geojson.addTo(map);
     });
+
+    //var helloPopup = L.popup().setContent('Hello World!');
+    var helloPopup = L.popup().setContent('Hello World!');
+
+    L.easyButton('fa-star', function(btn, map) {
+      helloPopup.setLatLng(map.getCenter()).openOn(map);
+    }).addTo(map);
   });
 }
 

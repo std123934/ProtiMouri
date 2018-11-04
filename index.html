@@ -14,6 +14,9 @@
   <!-- load jQuery  -->
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
     crossorigin="anonymous"></script>
+  <!-- Load EasyButton -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+  <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
   <!-- load Font-Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
   <!-- Load leaflet.extra-markers from local directory -->
@@ -29,7 +32,26 @@
       <div class="row">
         <div class="col-md-8"></div>
         <div id="title" class="title-text">
-          <h1>ProtiMouri</h1>
+          <!-- form -->
+          <div id="myForm">New Story</div>
+          <div id="detailForm">
+            <h3>Add New Story</h3>
+            <form id="theForm" action="#">
+              <input placeholder="Latitude" id="latitude" name="latitude" type="number" required />
+              <input placeholder="Longtitude" id="longtitude" name="longtitude" type="number" required />
+              <input placeholder="Alt" id="alt" name="alt" type="text" required />
+              <input placeholder="Chapter" id="myChapter" name="myChapter" type="text" required />
+              <input placeholder="Image path" id="image" name="image" type="text" required />
+              <input placeholder="Source Credit" id="source-credit" neme="source-credit" type="text" required />
+              <input placeholder="Source LInk" id="source-link" name="source-link" type="url" required />
+              <input placeholder="Zoom" id="zoom" name="zoom" type="number" required />
+              <textarea placeholder="Description" id="description" name="description"></textarea>
+              <input class="formBtn" type="submit" />
+              <input class="formBtn" type="reset" />
+            </form>
+          </div>
+          <!-- End Form -->
+          <h4>ProtiMouri</h4>
           <small>Scroll <i class="fa fa-chevron-down"></i></small>
         </div>
 
@@ -44,26 +66,78 @@
   </section>
 
 
-  <section id="myForm" class="py-5">
-    <div class="container">
-      <div class="row">
-        <form>
-          <div class="form-group">
-            <label for="chapter">Chapter</label>
-            <input type="text" class="form-control" id="chapter" placeholder="Enter chapter">
-          </div>
-          <br>
-          <div class="form-group">
-            <label for="zoom" Zoom></label>
-            <input type="text" class="form-control" id="zoom" placeholer="Enter Zoom">
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
   <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
   <!-- <script src="main.js"></script> -->
   <script type="text/javascript" src="script.js"></script>
+
+  <script>
+    $(function () {
+      // myForm form animations
+      $('#myForm').click(function () {
+        $('#detailForm').fadeToggle();
+      })
+
+      $(document).mouseup(function (e) {
+        var container = $("#detailForm");
+        if (!container.is(e.target) // if the target of the click isn't the container...
+          && container.has(e.target).length === 0) // ... nor a descendant of the container
+        {
+          container.fadeOut();
+        }
+        else if (container.has(e.target).length > 0) {
+          if (document.getElementById("theForm").onsubmit = function () { myFunction() });
+
+          function myFunction() {
+            var docData = {
+              "features": [{
+                "geometry": { "coordinates": [document.getElementById("latitude").value, document.getElementById("longtitude").value], "type": "Point" },
+                "properties": {
+                  "alt": document.getElementById("latitude").value,
+                  "chapter": document.getElementById("myChapter").value,
+                  "description": document.getElementById("description").value,
+                  "image": document.getElementById("image").value,
+                  "source-credit": document.getElementById("source-credit").value,
+                  "source-link": document.getElementById("source-link").value,
+                  "zoom": document.getElementById("zoom").value
+                }, "type": "Feature"
+              }], "type": "FeatureCollection"
+            };
+            try {
+              // Initialize Firebase
+              var config = {
+                apiKey: 'AIzaSyBkJEZVH3mPL9A14SS6sO65xOOpcxLD5mI',
+                authDomain: 'protimouri-8a891.firebaseapp.com',
+                databaseURL: 'https://protimouri-8a891.firebaseio.com',
+                projectId: 'protimouri-8a891',
+                storageBucket: 'protimouri-8a891.appspot.com',
+                messagingSenderId: '713038357373'
+              };
+              firebase.initializeApp(config);
+              var ref = firebase.database().ref();
+              var ratingRef = firebase.database().ref('features/');
+              var newRatingRef = ratingRef.push();
+
+              var messageField = document.getElementById("chapter").value;
+              newRatingRef.push({ chapter: messageField, text: message });
+
+              // db.collection("FeatureCollection").doc("features/").set(docData).then(function () {
+              //   console.log("Document successfully written!");
+              //   alert("OK");
+              // })
+              //   .catch(function (error) {
+              //     console.error("Error writing document: ", error);
+              //     alert('rejected');
+              //   });
+            }
+            catch (err) {
+              message.innerHTML = "Input is " + err;
+            }
+          }
+        }
+      });
+    });
+  </script>
+
 </body>
 
 </html>
