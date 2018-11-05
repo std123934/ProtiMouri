@@ -1,4 +1,5 @@
 // Initialize Firebase
+var myID = 0;
 var config = {
   apiKey: 'AIzaSyBkJEZVH3mPL9A14SS6sO65xOOpcxLD5mI',
   authDomain: 'protimouri-8a891.firebaseapp.com',
@@ -53,7 +54,7 @@ function initMap() {
           (function(layer, properties) {
             // This creates numerical icons to match the ID numbers
             // OR remove the next 6 lines for default blue Leaflet markers
-
+            myID = myID + 1;
             var numericMarker = L.ExtraMarkers.icon({
               icon: 'fa-number',
               number: feature.properties['id'],
@@ -157,7 +158,8 @@ function initMap() {
     var helloPopup = L.popup().setContent('Hello World!');
 
     L.easyButton('fa-star', function(btn, map) {
-      helloPopup.setLatLng(map.getCenter()).openOn(map);
+      //helloPopup.setLatLng(map.getCenter()).openOn(map);
+      map.setView([0, 0], 2);
     }).addTo(map);
   });
 }

@@ -92,34 +92,16 @@
 
           function myFunction() {
 
+
+            var ref = firebase.database().ref();
+            var ratingRef = firebase.database().ref('features/');
+
+            const addUserInputsUI = document.getElementsByClassName("user-input");
             try {
-              // Initialize Firebase
-              // var config = {
-              //   apiKey: 'AIzaSyBkJEZVH3mPL9A14SS6sO65xOOpcxLD5mI',
-              //   authDomain: 'protimouri-8a891.firebaseapp.com',
-              //   databaseURL: 'https://protimouri-8a891.firebaseio.com',
-              //   projectId: 'protimouri-8a891',
-              //   storageBucket: 'protimouri-8a891.appspot.com',
-              //   messagingSenderId: '713038357373'
-              // };
-              // firebase.initializeApp(config);
-              var ref = firebase.database().ref();
-              var ratingRef = firebase.database().ref('features/');
-              const addUserInputsUI = document.getElementsByClassName("user-input");
-              console.log(addUserInputsUI);
-
-              // let newFeature = {}; //This will hold the new feature
-              // // loop through View to get the data for the model 
-              // for (let i = 0, len = addUserInputsUI.length; i < len; i++) {
-              //   let key = addUserInputsUI[i].getAttribute('data-key');
-              //   let value = addUserInputsUI[i].value;
-              //   newFeature[key] = value;
-              // }
-              // console.log(newFeature);
-
               var docData = {
                 "geometry": { "coordinates": [document.getElementById("latitude").value, document.getElementById("longtitude").value], "type": "Point" },
                 "properties": {
+                  "id": myID + 1,
                   "alt": document.getElementById("latitude").value,
                   "chapter": document.getElementById("myChapter").value,
                   "description": document.getElementById("description").value,
@@ -130,16 +112,16 @@
                 }, "type": "Feature"
               };
 
-              // ratingRef.push(newFeature, function () {
-              //   console.log("data has been inserted");
-              // })
+
               ratingRef.push(docData, function () {
                 console.log("data has been inserted");
+                container.fadeOut();
+                alert('Database has been updated. Please refresh')
+
               })
             }
             catch (err) {
               console.log(err.name);
-              alert('error');
             }
           }
         }
