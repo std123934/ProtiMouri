@@ -37,15 +37,18 @@
           <div id="detailForm">
             <h3>Add New Story</h3>
             <form id="theForm" action="#">
-              <input placeholder="Latitude" id="latitude" name="latitude" type="number" required />
-              <input placeholder="Longtitude" id="longtitude" name="longtitude" type="number" required />
-              <input placeholder="Alt" id="alt" name="alt" type="text" required />
-              <input placeholder="Chapter" id="myChapter" name="myChapter" type="text" required />
-              <input placeholder="Image path" id="image" name="image" type="text" required />
-              <input placeholder="Source Credit" id="source-credit" neme="source-credit" type="text" required />
-              <input placeholder="Source LInk" id="source-link" name="source-link" type="url" required />
-              <input placeholder="Zoom" id="zoom" name="zoom" type="number" required />
-              <textarea placeholder="Description" id="description" name="description"></textarea>
+              <input placeholder="Latitude" id="latitude" data-key="latitude" type="number" class='user-input' required />
+              <input placeholder="Longtitude" id="longtitude" data-key="longtitude" type="number" class='user-input'
+                required />
+              <input placeholder="Alt" id="alt" data-key="alt" type="text" class='user-input' required />
+              <input placeholder="Chapter" id="myChapter" data-key="myChapter" type="text" class='user-input' required />
+              <input placeholder="Image path" id="image" data-key="image" type="text" class='user-input' required />
+              <input placeholder="Source Credit" id="source-credit" data-key="source-credit" class='user-input' type="text"
+                required />
+              <input placeholder="Source LInk" id="source-link" data-key="source-link" type="url" class='user-input'
+                required />
+              <input placeholder="Zoom" id="zoom" data-key="zoom" type="number" class='user-input' required />
+              <textarea placeholder="Description" id="description" data-key="description" class='user-input'></textarea>
               <input class="formBtn" type="submit" />
               <input class="formBtn" type="reset" />
             </form>
@@ -88,8 +91,33 @@
           if (document.getElementById("theForm").onsubmit = function () { myFunction() });
 
           function myFunction() {
-            var docData = {
-              "features": [{
+
+            try {
+              // Initialize Firebase
+              // var config = {
+              //   apiKey: 'AIzaSyBkJEZVH3mPL9A14SS6sO65xOOpcxLD5mI',
+              //   authDomain: 'protimouri-8a891.firebaseapp.com',
+              //   databaseURL: 'https://protimouri-8a891.firebaseio.com',
+              //   projectId: 'protimouri-8a891',
+              //   storageBucket: 'protimouri-8a891.appspot.com',
+              //   messagingSenderId: '713038357373'
+              // };
+              // firebase.initializeApp(config);
+              var ref = firebase.database().ref();
+              var ratingRef = firebase.database().ref('features/');
+              const addUserInputsUI = document.getElementsByClassName("user-input");
+              console.log(addUserInputsUI);
+
+              // let newFeature = {}; //This will hold the new feature
+              // // loop through View to get the data for the model 
+              // for (let i = 0, len = addUserInputsUI.length; i < len; i++) {
+              //   let key = addUserInputsUI[i].getAttribute('data-key');
+              //   let value = addUserInputsUI[i].value;
+              //   newFeature[key] = value;
+              // }
+              // console.log(newFeature);
+
+              var docData = {
                 "geometry": { "coordinates": [document.getElementById("latitude").value, document.getElementById("longtitude").value], "type": "Point" },
                 "properties": {
                   "alt": document.getElementById("latitude").value,
@@ -100,37 +128,18 @@
                   "source-link": document.getElementById("source-link").value,
                   "zoom": document.getElementById("zoom").value
                 }, "type": "Feature"
-              }], "type": "FeatureCollection"
-            };
-            try {
-              // Initialize Firebase
-              var config = {
-                apiKey: 'AIzaSyBkJEZVH3mPL9A14SS6sO65xOOpcxLD5mI',
-                authDomain: 'protimouri-8a891.firebaseapp.com',
-                databaseURL: 'https://protimouri-8a891.firebaseio.com',
-                projectId: 'protimouri-8a891',
-                storageBucket: 'protimouri-8a891.appspot.com',
-                messagingSenderId: '713038357373'
               };
-              firebase.initializeApp(config);
-              var ref = firebase.database().ref();
-              var ratingRef = firebase.database().ref('features/');
-              var newRatingRef = ratingRef.push();
 
-              var messageField = document.getElementById("chapter").value;
-              newRatingRef.push({ chapter: messageField, text: message });
-
-              // db.collection("FeatureCollection").doc("features/").set(docData).then(function () {
-              //   console.log("Document successfully written!");
-              //   alert("OK");
+              // ratingRef.push(newFeature, function () {
+              //   console.log("data has been inserted");
               // })
-              //   .catch(function (error) {
-              //     console.error("Error writing document: ", error);
-              //     alert('rejected');
-              //   });
+              ratingRef.push(docData, function () {
+                console.log("data has been inserted");
+              })
             }
             catch (err) {
-              message.innerHTML = "Input is " + err;
+              console.log(err.name);
+              alert('error');
             }
           }
         }
